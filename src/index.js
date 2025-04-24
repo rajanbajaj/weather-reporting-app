@@ -3,6 +3,7 @@ const os = require("os");
 const fs = require('fs');
 const top_50_cities_location_api_url = `http://dataservice.accuweather.com/locations/v1/topcities/50?apikey=${process.env.ACCUWEATHER_API_KEY}` 
 const top_50_cities_current_conditions_api_url = `http://dataservice.accuweather.com/currentconditions/v1/topcities/50?apikey=${process.env.ACCUWEATHER_API_KEY}` 
+const MOCK_APIS = process.env.MOCK_APIS;
 
 const mockFetchLocationsDataAPI = async () => {
   return {
@@ -46,13 +47,15 @@ const findObjectByKey = (objectArray, key, value) => {
   return objectArray.find((object) => object.hasOwnProperty(key) && object[key] === value);
 }
 
+
+// Execution
+console.log("API Mocking: " + MOCK_APIS)
 let top50LocationData = [];
 let top50CondtionData = [];
 let result = [];
-
-fetchLocationsData(true)
+fetchLocationsData(MOCK_APIS==="yes")
   .then((resp) => {
-    if(resp.status === "200") {
+    if(resp.status == "200") {
       return resp.json()
     }
 
@@ -61,9 +64,9 @@ fetchLocationsData(true)
   .then((data) => top50LocationData = data)
   .catch((error) => console.log(error));
 
-fetchCurrentConditionForTopLocations(true)
+fetchCurrentConditionForTopLocations(MOCK_APIS==="yes")
   .then((resp) => {
-    if(resp.status === "200") {
+    if(resp.status == "200") {
       return resp.json()
     }
 
