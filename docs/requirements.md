@@ -10,6 +10,21 @@
 * The reporting service should be able to perform goals 2 to 5 programmatically. Add the code to register it as a weekly cron job.
 
 ## Specifications
+
+### Sheet Columns
+* Name	
+* Country	
+* Region
+* Timezone
+* Rank	
+* Latitude	
+* Longitude	
+* Weather Text	
+* Is Day Time	
+* Temperature Celsius (C)	
+* Temperature Fahrenheit (F)	
+* Last Updated At
+
 ### Dummy top city dataset
 ```json
 {
@@ -35,3 +50,25 @@ NodeJS v22+ (no framework/library is used).
   * Good performance
   * Security
     * Authorization
+
+# Implementation Plan
+* Get data of top 50 cities locations: http://dataservice.accuweather.com/locations/v1/topcities/:group?apikey={{accuweather_api_key}}
+  * Name (.EnglishName)
+  * Country (.Country.EnglishName)
+  * Region (.Region.EnglishName)
+  * TimeZone (.TimeZone.Name)
+  * Rank (.Rank)
+  * Latitude (.GeoPosition.Latitude)
+  * Longitude (.GeoPosition.Longitude)
+* Get data of current conditions of top 50 cities: http://dataservice.accuweather.com/currentconditions/v1/topcities/:group?apikey={{accuweather_api_key}}
+  * Weather Text (.WeatherText)
+  * Is Day Time (.IsDayTime)
+  * Temperature Celsius (C) (.Temperature.Metric.Value)
+  * Temperature Fahrenheit (F)	(.Temperature.Imperial.Value)
+  * Last Updated At (.LocalObservationDateTime)
+* Merge the data to make it required format
+* Create a CSV File and Store it in local file system
+* Create Google Excel sheet
+* Creaet Public sharable link
+* Send email
+* Performance optimization and code refactor
