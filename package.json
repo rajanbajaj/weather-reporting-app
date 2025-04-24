@@ -1,0 +1,24 @@
+{
+  "name": "weather-reporting-service",
+  "version": "1.0.0",
+  "description": "A node.js weather reporting app to schedule the reports",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rajanbajaj/weather-reporting-app.git"
+  },
+  "author": "Rajan Bajaj",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rajanbajaj/weather-reporting-app/issues"
+  },
+  "homepage": "https://github.com/rajanbajaj/weather-reporting-app#readme"
+}
