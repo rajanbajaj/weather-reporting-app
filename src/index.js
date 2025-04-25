@@ -1,5 +1,12 @@
-const { createSheet, getAccessToken ,makeSheetPublic } = require("./services/sheetService");
+const { sendEmailWithSpreadSheetUrl } = require("./services/emailService");
+const { 
+  createSheet, 
+  getAccessToken,
+  makeSheetPublic,
+  makeMeEditorOfSheet 
+} = require("./services/sheetService");
 const { getMergedLocationAndConditionData } = require("./services/weatherService");
+const { logger } = require("./utils/logger");
 
 /**
  * gets the weather data
@@ -9,6 +16,7 @@ const { getMergedLocationAndConditionData } = require("./services/weatherService
  */
 getMergedLocationAndConditionData().then((data) => {
   const headers = Object.keys(data[0]);
+  const indexOfIsDayTimeColumn = headers.indexOf("Is Day Time"); // to make this column values centered
   const rows = [
     ...data.map(row => headers.map(key => row[key]))
   ];
@@ -46,13 +54,26 @@ getMergedLocationAndConditionData().then((data) => {
   // https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets
   const rowData = rows.map(row => (
       {
-        values: row.map(cell => (
-          {
+        values: row.map((cell, index) => {
+
+          // make this column values centerd aligned
+          if (index === indexOfIsDayTimeColumn) {
+            return {
+              userEnteredValue: { 
+                stringValue: String(cell) 
+              },
+              userEnteredFormat: {
+                horizontalAlignment: "CENTER"
+              }
+            }
+          }
+
+          return {
             userEnteredValue: typeof cell === 'number'
               ? { numberValue: cell }
               : { stringValue: String(cell) }
           }
-        ))
+        })
       }
   ));
 
@@ -84,22 +105,41 @@ getMergedLocationAndConditionData().then((data) => {
 
   getAccessToken().then((accessToken) => {
     createSheet(accessToken, payload).then((sheet) => {
-      // if the sheet creation was successful, make it public
+      // if the sheet creation was successful, make it public read-only report
       if (sheet && sheet.spreadsheetId) {
-        makeSheetPublic(sheet.spreadsheetId, accessToken, 'writer')
+
+        // if SHEET_OWNER_EMAIL_ADDRESS is set in .env file then make owner
+        if (process.env.SHEET_OWNER_EMAIL_ADDRESS) {
+          makeMeEditorOfSheet(sheet.spreadsheetId, accessToken)
+            .then((response) => {
+              const message = `Sheet made public successfully: id: ${sheet.spreadsheetId} url: ${sheet.spreadsheetUrl}`;
+              logger.info(message);
+            })
+            .catch((error) => {
+              const message = `Error making editor: ${error.message}`;
+              logger.error(message);
+            });
+        }
+
+        makeSheetPublic(sheet.spreadsheetId, accessToken, 'reader')
           .then((response) => {
-            console.log('Sheet made public successfully:', response);
+            const message = `Sheet made public successfully: ${sheet.spreadsheetId}`;
+            logger.info(message);
           })
           .catch((error) => {
-            console.error('Error making sheet public:', error.message);
+            const message = `Error making sheet public: ${error.message}`;
+            logger.error(message);
           });
+
+        // send email
+        // sendEmailWithSpreadSheetUrl(sheet.spreadsheetUrl).then((response) => logger.info(`${response}`));
       } else {
-        console.error('Failed to create sheet.');
+        logger.error('Failed to create sheet.');
       }
     }).catch((error) => {
-      console.error('Error creating sheet:', error.message);
+      logger.error('Error creating sheet:' + error.message);
     });
   }).catch((error) => {
-    console.error('Error getting access token:', error.message);
+    logger.error('Error getting access token:' + error.message);
   });
 })

@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 const fs = require('fs');
-const SERVICE_ACCOUNT_FILE = process.env.SERVICE_ACCOUNT_FILE;
-const SERVICE_ACCOUNT = JSON.parse(fs.readFileSync(SERVICE_ACCOUNT_FILE).toString());
+const SERVICE_ACCOUNT_FILE_PATH = process.env.SERVICE_ACCOUNT_FILE_PATH;
+const SERVICE_ACCOUNT = JSON.parse(fs.readFileSync(SERVICE_ACCOUNT_FILE_PATH).toString());
 
 
 const base64url = (input) => {
@@ -31,5 +31,6 @@ const sign = (payload, header, algorithm = 'RSA-SHA256') => {
 }
 
 module.exports = {
+  base64url,
   sign
 }

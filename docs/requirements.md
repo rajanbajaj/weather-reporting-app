@@ -71,6 +71,7 @@ NodeJS v22+ (no framework/library is used).
 * Create Google Excel sheet:
   * Use Google developer console 
   * Create a Project to get API Keys
+  * Create service account for all the operations
   * Create JWT library to sign, decode and verify
   * Create JWT access tokens from API KEYs
   * Use Google APIs to make request
@@ -78,4 +79,5 @@ NodeJS v22+ (no framework/library is used).
 * Add logger to log sheet related details
 * Check formatting of the sheet and values
 * Send email
+  * Create google workspace to connect worksapce domain to service account
 * Performance optimization and code refactor
