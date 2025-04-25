@@ -116,7 +116,7 @@ const makeMeOwnerOfSheet = async (spreadsheetId, accessToken) => {
   }
 }; 
 
-const makeSheetPublic = async (spreadsheetId, accessToken, role = 'reader') => {
+const makeSheetPublic = async (spreadsheetId, accessToken, permissions) => {
   try {
     const response = await fetch(`https://www.googleapis.com/drive/v3/files/${spreadsheetId}/permissions`, {
       method: 'POST',
@@ -124,11 +124,7 @@ const makeSheetPublic = async (spreadsheetId, accessToken, role = 'reader') => {
         'Authorization': `Bearer ${accessToken}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        role: role,                   // 'reader' (view only) or 'writer' (edit)
-        type: 'anyone',               // Makes it public
-        allowFileDiscovery: false     // So it won't show up in search
-      })
+      body: JSON.stringify(permissions)
     });
 
     const result = await response.json();
@@ -137,7 +133,7 @@ const makeSheetPublic = async (spreadsheetId, accessToken, role = 'reader') => {
       throw new Error(JSON.stringify(result));
     }
 
-    logger.info(`SHEET: Sheet is now public with role: ${role}`);
+    logger.info(`SHEET: Sheet is now public.`);
   } catch (error) {
     logger.error('SHEET: Failed to update sheet permissions:' + error.message);
   }

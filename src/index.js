@@ -110,26 +110,40 @@ getMergedLocationAndConditionData().then((data) => {
 
         // if SHEET_OWNER_EMAIL_ADDRESS is set in .env file then make owner
         if (process.env.SHEET_OWNER_EMAIL_ADDRESS) {
-          makeMeEditorOfSheet(sheet.spreadsheetId, accessToken)
-            .then((response) => {
-              const message = `Sheet made public successfully: id: ${sheet.spreadsheetId} url: ${sheet.spreadsheetUrl}`;
-              logger.info(message);
-            })
-            .catch((error) => {
-              const message = `Error making editor: ${error.message}`;
-              logger.error(message);
-            });
+          let userEmailAddresses = process.env.SHEET_OWNER_EMAIL_ADDRESS.split(",");
+          userEmailAddresses.forEach((emailAddress) => {
+            const sheetPermissions = {
+              role: 'writer',
+              type: 'user',
+              emailAddress: emailAddress
+            }
+            makeSheetPublic(sheet.spreadsheetId, accessToken, sheetPermissions)
+              .then((response) => {
+                const message = `Sheet made public successfully: id: ${sheet.spreadsheetId} url: ${sheet.spreadsheetUrl}`;
+                logger.info(message);
+              })
+              .catch((error) => {
+                const message = `Error making editor: ${error.message}`;
+                logger.error(message);
+              });
+          })
         }
 
-        makeSheetPublic(sheet.spreadsheetId, accessToken, 'reader')
-          .then((response) => {
-            const message = `Sheet made public successfully: ${sheet.spreadsheetId}`;
-            logger.info(message);
-          })
-          .catch((error) => {
-            const message = `Error making sheet public: ${error.message}`;
-            logger.error(message);
-          });
+        // // Uncomment this code if sheet is set to public to all
+        // const sheetPermissions = {
+        //   role: "reader",
+        //   type: "anyone",
+        //   allowFileDiscovery: false
+        // }
+        // makeSheetPublic(sheet.spreadsheetId, accessToken, sheetPermissions)
+        //   .then((response) => {
+        //     const message = `Sheet made public successfully: ${sheet.spreadsheetId}`;
+        //     logger.info(message);
+        //   })
+        //   .catch((error) => {
+        //     const message = `Error making sheet public: ${error.message}`;
+        //     logger.error(message);
+        //   });
 
         // send email
         // sendEmailWithSpreadSheetUrl(sheet.spreadsheetUrl).then((response) => logger.info(`${response}`));
