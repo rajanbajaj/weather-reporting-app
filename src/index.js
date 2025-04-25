@@ -16,6 +16,7 @@ const { logger } = require("./utils/logger");
  */
 getMergedLocationAndConditionData().then((data) => {
   const headers = Object.keys(data[0]);
+  const indexOfIsDayTimeColumn = headers.indexOf("Is Day Time"); // to make this column values centered
   const rows = [
     ...data.map(row => headers.map(key => row[key]))
   ];
@@ -53,13 +54,26 @@ getMergedLocationAndConditionData().then((data) => {
   // https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets
   const rowData = rows.map(row => (
       {
-        values: row.map(cell => (
-          {
+        values: row.map((cell, index) => {
+
+          // make this column values centerd aligned
+          if (index === indexOfIsDayTimeColumn) {
+            return {
+              userEnteredValue: { 
+                stringValue: String(cell) 
+              },
+              userEnteredFormat: {
+                horizontalAlignment: "CENTER"
+              }
+            }
+          }
+
+          return {
             userEnteredValue: typeof cell === 'number'
               ? { numberValue: cell }
               : { stringValue: String(cell) }
           }
-        ))
+        })
       }
   ));
 
@@ -118,7 +132,7 @@ getMergedLocationAndConditionData().then((data) => {
           });
 
         // send email
-        sendEmailWithSpreadSheetUrl(sheet.spreadsheetUrl).then((response) => logger.info(`${response}`));
+        // sendEmailWithSpreadSheetUrl(sheet.spreadsheetUrl).then((response) => logger.info(`${response}`));
       } else {
         logger.error('Failed to create sheet.');
       }

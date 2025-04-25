@@ -1,4 +1,5 @@
 const { error } = require("console");
+const { convertToIST } = require("../utils/date");
 const fs = require('fs');
 const { logger } = require("../utils/logger");
 const top_50_cities_location_api_url = `http://dataservice.accuweather.com/locations/v1/topcities/50?apikey=${process.env.ACCUWEATHER_API_KEY}`;
@@ -118,10 +119,10 @@ const getMergedLocationAndConditionData = async () => {
 
       let currentConditionForLocation = findObjectByKey(top50CondtionData, "Key", locationData.Key)
       tmp["Weather Text"] = currentConditionForLocation.WeatherText;
-      tmp["Is Day Time"] = currentConditionForLocation.IsDayTime;
+      tmp["Is Day Time"] = currentConditionForLocation.IsDayTime ? "TRUE" : "FALSE";
       tmp["Temperature Celsius (C)"] = currentConditionForLocation.Temperature.Metric.Value;
       tmp["Temperature Fahrenheit (F)"] = currentConditionForLocation.Temperature.Imperial.Value;
-      tmp["Last Updated At"] = currentConditionForLocation.LocalObservationDateTime
+      tmp["Last Updated At"] = currentConditionForLocation.LocalObservationDateTime ? convertToIST(currentConditionForLocation.LocalObservationDateTime) : currentConditionForLocation.LocalObservationDateTime;
 
       result.push(tmp);
     }

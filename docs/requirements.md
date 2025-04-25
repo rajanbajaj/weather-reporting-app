@@ -76,8 +76,8 @@ NodeJS v22+ (no framework/library is used).
   * Create JWT access tokens from API KEYs
   * Use Google APIs to make request
 * Creaet Public sharable link
-* Add logger to log sheet related details [later]
-* Check formatting of the sheet and valuess [later]
+* Add logger to log sheet related details
+* Check formatting of the sheet and values
 * Send email
   * Create google workspace to connect worksapce domain to service account
 * Performance optimization and code refactor
