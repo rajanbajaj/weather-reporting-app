@@ -19,12 +19,12 @@ A node.js weather reporting app to schedule the reports
   * ACCUWEATHER_API_KEY: API key generated for weather app
   * MOCK_APIS: "yes" or "no". If set to "yes" it will mock weather APIs without using actual APIS.
   * SERVICE_ACCOUNT_FILE_PATH: File path of the generate key.json file in previous steps
-  * SHEET_OWNER_EMAIL_ADDRESS: gmail account of user that is in the organisation of the same serivce account is linked
+  * SHEET_OWNER_EMAIL_ADDRESS: comma separated gmail accounts of users that is in the organisation of the same serivce account is linked
 ```bash
 ACCUWEATHER_API_KEY=YOUR_API_KEY_HERE
 MOCK_APIS=yes  # should be no for production settings 
 SERVICE_ACCOUNT_FILE_PATH=./credentials/key.json
-SHEET_OWNER_EMAIL_ADDRESS=example@xyz.com
+SHEET_OWNER_EMAIL_ADDRESS=example@xyz.com,abc@vfa.com
 ```
 
 # Running the application:
@@ -56,6 +56,12 @@ $ cd ./scripts
 $ ./remove_schedular.sh
 ```
 
+# Sending notification email to the contributers (read mode configured for now)
+Set the `SHEET_OWNER_EMAIL_ADDRESS` .env variable to add comma separated email addresses.
+This will notify all the users listed in this varaible via email with link of the created spreadsheet.
+
+Future Improvements: Use Gmail APIs through organization account to send customized emails.
+
 # Logs
 ## Application logs:
 All application logs wheather running manually or by schedular will be saved to ./logs/app.log file.
@@ -71,6 +77,15 @@ Example Logs:
 
 ## Cron logs:
 If schedular is set using `./scripts/schedular.sh`, the logs will also be saved in ./logs/cron.log file.
+
+# Future Improvements:
+Make this service more configurable to add configurations to .env file and use them in the code.
+Example for this could be:
+* sheet permissions configurable through .env
+* app logging levels based on app runtime environment configurable through .env
+* JWT algorithms to use for signing payload configurable through .env
+* Datetime formating using locale variable configurable through .env
+* Improve logging
 
 # References:
 * https://developers.google.com/workspace/guides/create-credentials#api-key
