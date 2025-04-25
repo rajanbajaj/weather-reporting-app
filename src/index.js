@@ -1,4 +1,9 @@
-const { createSheet, getAccessToken ,makeSheetPublic } = require("./services/sheetService");
+const { 
+  createSheet, 
+  getAccessToken,
+  makeSheetPublic,
+  makeMeEditorOfSheet 
+} = require("./services/sheetService");
 const { getMergedLocationAndConditionData } = require("./services/weatherService");
 
 /**
@@ -84,9 +89,21 @@ getMergedLocationAndConditionData().then((data) => {
 
   getAccessToken().then((accessToken) => {
     createSheet(accessToken, payload).then((sheet) => {
-      // if the sheet creation was successful, make it public
+      // if the sheet creation was successful, make it public read-only report
       if (sheet && sheet.spreadsheetId) {
-        makeSheetPublic(sheet.spreadsheetId, accessToken, 'writer')
+
+        // if SHEET_OWNER_EMAIL_ADDRESS is set in .env file then make owner
+        if (process.env.SHEET_OWNER_EMAIL_ADDRESS) {
+          makeMeEditorOfSheet(sheet.spreadsheetId, accessToken)
+            .then((response) => {
+              console.log('Sheet made public successfully:', response);
+            })
+            .catch((error) => {
+              console.error('Error making sheet public:', error.message);
+            });
+        }
+
+        makeSheetPublic(sheet.spreadsheetId, accessToken, 'reader')
           .then((response) => {
             console.log('Sheet made public successfully:', response);
           })
