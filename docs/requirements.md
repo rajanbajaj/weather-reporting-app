@@ -81,3 +81,8 @@ NodeJS v22+ (no framework/library is used).
 * Send email
   * Create google workspace to connect worksapce domain to service account
 * Performance optimization and code refactor
+
+# Blockers
+* Making sheet owner using Google drive permissions API.
+* Sending customized emails using Google Gmail APIs.
+  * Service account directly cannot send emails using gmail APIs.
