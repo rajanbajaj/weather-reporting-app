@@ -68,7 +68,12 @@ NodeJS v22+ (no framework/library is used).
   * Last Updated At (.LocalObservationDateTime)
 * Merge the data to make it required format
 * Create a CSV File and Store it in local file system
-* Create Google Excel sheet
+* Create Google Excel sheet:
+  * Use Google developer console 
+  * Create a Project to get API Keys
+  * Create JWT library to sign, decode and verify
+  * Create JWT access tokens from API KEYs
+  * Use Google APIs to make request
 * Creaet Public sharable link
 * Send email
 * Performance optimization and code refactor

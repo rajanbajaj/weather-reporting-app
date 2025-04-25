@@ -1,9 +1,9 @@
 const { error } = require("console");
-const os = require("os");
 const fs = require('fs');
-const top_50_cities_location_api_url = `http://dataservice.accuweather.com/locations/v1/topcities/50?apikey=${process.env.ACCUWEATHER_API_KEY}` 
-const top_50_cities_current_conditions_api_url = `http://dataservice.accuweather.com/currentconditions/v1/topcities/50?apikey=${process.env.ACCUWEATHER_API_KEY}` 
+const top_50_cities_location_api_url = `http://dataservice.accuweather.com/locations/v1/topcities/50?apikey=${process.env.ACCUWEATHER_API_KEY}`;
+const top_50_cities_current_conditions_api_url = `http://dataservice.accuweather.com/currentconditions/v1/topcities/50?apikey=${process.env.ACCUWEATHER_API_KEY}`;
 const MOCK_APIS = process.env.MOCK_APIS;
+const { createSheet, getAccessToken ,makeSheetPublic } = require("./services/sheetService");
 
 const mockFetchLocationsDataAPI = async () => {
   return {
@@ -13,7 +13,7 @@ const mockFetchLocationsDataAPI = async () => {
           },
     status: "200"
   }
-}
+};
 
 const mockFetchCurrentConditionForTopLocationsAPI = async () => {
   return {
@@ -23,7 +23,7 @@ const mockFetchCurrentConditionForTopLocationsAPI = async () => {
           },
     status: "200"
   }
-}
+};
 
 const fetchLocationsData = async (mockData = false) => {
   if (mockData) {
@@ -32,7 +32,7 @@ const fetchLocationsData = async (mockData = false) => {
 
   const data = await fetch(top_50_cities_location_api_url);
   return data;
-}
+};
 
 const fetchCurrentConditionForTopLocations = async (mockData = false) => {
   if (mockData) {
@@ -41,11 +41,11 @@ const fetchCurrentConditionForTopLocations = async (mockData = false) => {
   
   const data = await fetch(top_50_cities_current_conditions_api_url);
   return data;
-}
+};
 
 const findObjectByKey = (objectArray, key, value) => {
   return objectArray.find((object) => object.hasOwnProperty(key) && object[key] === value);
-}
+};
 
 
 // Execution
@@ -77,10 +77,10 @@ fetchCurrentConditionForTopLocations(MOCK_APIS==="yes")
 
 
 Promise.all([
-  fetchLocationsData()
+  fetchLocationsData(MOCK_APIS==="yes")
     .then((resp) => resp.json())
     .then((data) => top50LocationData = data),
-  fetchCurrentConditionForTopLocations()
+  fetchCurrentConditionForTopLocations(MOCK_APIS==="yes")
     .then((resp) => resp.json())
     .then((data) => top50CondtionData = data)
 ]).then(() => {
@@ -114,4 +114,25 @@ Promise.all([
   ];
 
   fs.writeFileSync('output.csv', csvRows.join('\n'));
+});
+
+getAccessToken().then((accessToken) => {
+  createSheet(accessToken).then((sheet) => {
+    // if the sheet creation was successful, make it public
+    if (sheet && sheet.spreadsheetId) {
+      makeSheetPublic(sheet.spreadsheetId, accessToken, 'writer')
+        .then((response) => {
+          console.log('Sheet made public successfully:', response);
+        })
+        .catch((error) => {
+          console.error('Error making sheet public:', error.message);
+        });
+    } else {
+      console.error('Failed to create sheet.');
+    }
+  }).catch((error) => {
+    console.error('Error creating sheet:', error.message);
+  });
+}).catch((error) => {
+  console.error('Error getting access token:', error.message);
 });
