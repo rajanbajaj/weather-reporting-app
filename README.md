@@ -94,6 +94,7 @@ Make this service more configurable to add configurations to .env file and use t
 Example for this could be:
 * sheet permissions configurable through .env
 * app logging levels based on app runtime environment configurable through .env
+* If app environemnt is production skip loggging for debug function.
 * JWT algorithms to use for signing payload configurable through .env
 * Datetime formating using locale variable configurable through .env
 * Improve logging

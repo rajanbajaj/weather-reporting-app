@@ -16,6 +16,7 @@ const logToFile = (level, message) => {
 };
 
 const logger = {
+  // TODO: If app environemnt is production skip loggging for debug function
   debug: (msg) => logToFile('debug', msg),
   info: (msg) => logToFile('info', msg),
   warn: (msg) => logToFile('warn', msg),

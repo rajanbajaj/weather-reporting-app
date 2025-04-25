@@ -4,7 +4,18 @@ const { logger } = require("../utils/logger");
 
 const getAccessToken = async (serviceAccount, scopes) => {
   const iat = createIatTimestamp()
-  exp = iat + 3600 // expiration time is 1hour
+  let exp = iat + 300 // expiration time is 5min
+
+  // get exp value from .env file
+  if (process.env.JWT_EXPIRY) {
+    const parsedExpiry = Number(process.env.JWT_EXPIRY);
+    if (!isNaN(parsedExpiry)) {
+      exp = iat + parsedExpiry;
+    } else {
+      logger.warn('Invalid JWT_EXPIRY value in environment. Using default expiry.');
+    }
+  }
+  
   payload = {
     iss: serviceAccount.client_email,
     sub: serviceAccount.client_email,
@@ -19,6 +30,7 @@ const getAccessToken = async (serviceAccount, scopes) => {
   };
 
   const jwt = sign(payload, header);
+  logger.debug("JWT token generated successfully: " + jwt);
   
   // generate access token using jwt token
   try {
@@ -41,6 +53,7 @@ const getAccessToken = async (serviceAccount, scopes) => {
       throw new Error(JSON.stringify(data));
     }
 
+    logger.debug("Access token generated successfully: " + data.access_token);
     return data.access_token;
   } catch (error) {
     logger.error('Failed to get access token:' + error.message);
