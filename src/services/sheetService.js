@@ -1,60 +1,4 @@
-const fs = require('fs');
-const SERVICE_ACCOUNT_FILE_PATH = process.env.SERVICE_ACCOUNT_FILE_PATH;
-const SERVICE_ACCOUNT = JSON.parse(fs.readFileSync(SERVICE_ACCOUNT_FILE_PATH).toString());
-const SERVICE_ENDPOINT = "https://sheets.googleapis.com";
-const SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive'
-const { sign } = require("../utils/jwt");
 const { logger } = require('../utils/logger');
-
-const createIatTimestamp = () => {
-  return Math.floor(Date.now() / 1000);
-}
-
-const getAccessToken = async () => {
-  let iat = createIatTimestamp()
-  exp = iat + 3600 // expiration time is 1hour
-  payload = {
-    iss: SERVICE_ACCOUNT.client_email,
-    sub: SERVICE_ACCOUNT.client_email,
-    scope: SCOPES,
-    aud: SERVICE_ACCOUNT.token_uri,
-    iat: iat,
-    exp: exp
-  }
-  const header = {
-    alg: 'RS256',
-    typ: 'JWT'
-  };
-
-  const jwt = sign(payload, header);
-
-  // get access token using jwt  
-  try {
-    const formBody = new URLSearchParams({
-      grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-      assertion: jwt
-    });
-
-    const response = await fetch(SERVICE_ACCOUNT.token_uri, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: formBody
-    });
-
-    const data = await response.json();
-
-    if (response.status != "200") {
-      throw new Error(JSON.stringify(data));
-    }
-
-    logger.info('SHEET: Access Token:' + data.access_token);
-    return data.access_token;
-  } catch (error) {
-    logger.error('SHEET: Failed to get access token: ' + error.message);
-  }
-}
 
 const makeMeEditorOfSheet = async (spreadsheetId, accessToken) => {
   try {
@@ -163,7 +107,6 @@ const createSheet = async (accessToken, payload) => {
 
 module.exports = {
   createSheet,
-  getAccessToken,
   makeSheetPublic,
   makeMeEditorOfSheet,
   makeMeOwnerOfSheet

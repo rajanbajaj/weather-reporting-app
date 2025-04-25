@@ -1,8 +1,8 @@
 const crypto = require('crypto');
 const fs = require('fs');
+
 const SERVICE_ACCOUNT_FILE_PATH = process.env.SERVICE_ACCOUNT_FILE_PATH;
 const SERVICE_ACCOUNT = JSON.parse(fs.readFileSync(SERVICE_ACCOUNT_FILE_PATH).toString());
-
 
 const base64url = (input) => {
   const str = typeof input === 'string' ? input : JSON.stringify(input);
