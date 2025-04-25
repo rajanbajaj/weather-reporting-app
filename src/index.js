@@ -1,12 +1,15 @@
 const { sendEmailWithSpreadSheetUrl } = require("./services/emailService");
 const { 
   createSheet, 
-  getAccessToken,
   makeSheetPublic,
   makeMeEditorOfSheet 
 } = require("./services/sheetService");
 const { getMergedLocationAndConditionData } = require("./services/weatherService");
 const { logger } = require("./utils/logger");
+const fs = require("fs");
+const { getAccessToken } = require("./services/googleTokenService")
+const SERVICE_ACCOUNT_FILE_PATH = process.env.SERVICE_ACCOUNT_FILE_PATH;
+const serviceAccount = JSON.parse(fs.readFileSync(SERVICE_ACCOUNT_FILE_PATH).toString());
 
 /**
  * gets the weather data
@@ -103,14 +106,15 @@ getMergedLocationAndConditionData().then((data) => {
     ]
   };
 
-  getAccessToken().then((accessToken) => {
+  const scopes = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive'
+  getAccessToken(serviceAccount, scopes).then((accessToken) => {
     createSheet(accessToken, payload).then((sheet) => {
       // if the sheet creation was successful, make it public read-only report
       if (sheet && sheet.spreadsheetId) {
 
         // if SHEET_OWNER_EMAIL_ADDRESS is set in .env file then make owner
         if (process.env.SHEET_OWNER_EMAIL_ADDRESS) {
-          let userEmailAddresses = process.env.SHEET_OWNER_EMAIL_ADDRESS.split(",");
+          const userEmailAddresses = process.env.SHEET_OWNER_EMAIL_ADDRESS.split(",");
           userEmailAddresses.forEach((emailAddress) => {
             const sheetPermissions = {
               role: 'writer',
@@ -119,7 +123,7 @@ getMergedLocationAndConditionData().then((data) => {
             }
             makeSheetPublic(sheet.spreadsheetId, accessToken, sheetPermissions)
               .then((response) => {
-                const message = `Sheet made public successfully: id: ${sheet.spreadsheetId} url: ${sheet.spreadsheetUrl}`;
+                const message = `Sheet made public for ${emailAddress} successfully: spreadsheetId: ${sheet.spreadsheetId} spreadsheetUrl: ${sheet.spreadsheetUrl}`;
                 logger.info(message);
               })
               .catch((error) => {
@@ -156,4 +160,4 @@ getMergedLocationAndConditionData().then((data) => {
   }).catch((error) => {
     logger.error('Error getting access token:' + error.message);
   });
-})
+});

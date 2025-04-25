@@ -24,6 +24,11 @@ function convertToIST(datetimeString) {
   return formattedDate;
 }
 
+const createIatTimestamp = () => {
+  return Math.floor(Date.now() / 1000);
+}
+
 module.exports = {
-  convertToIST
+  convertToIST,
+  createIatTimestamp
 }
