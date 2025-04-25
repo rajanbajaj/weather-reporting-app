@@ -1,3 +1,4 @@
+const { sendEmailWithSpreadSheetUrl } = require("./services/emailService");
 const { 
   createSheet, 
   getAccessToken,
@@ -5,9 +6,7 @@ const {
   makeMeEditorOfSheet 
 } = require("./services/sheetService");
 const { getMergedLocationAndConditionData } = require("./services/weatherService");
-const {
-  sendEmailWithSpreadSheetUrl
-} = require("./services/emailService");
+const { logger } = require("./utils/logger");
 
 /**
  * gets the weather data
@@ -99,30 +98,34 @@ getMergedLocationAndConditionData().then((data) => {
         if (process.env.SHEET_OWNER_EMAIL_ADDRESS) {
           makeMeEditorOfSheet(sheet.spreadsheetId, accessToken)
             .then((response) => {
-              console.log('Sheet made public successfully:', response);
+              const message = `Sheet made public successfully: id: ${sheet.spreadsheetId} url: ${sheet.spreadsheetUrl}`;
+              logger.info(message);
             })
             .catch((error) => {
-              console.error('Error making sheet public:', error.message);
+              const message = `Error making editor: ${error.message}`;
+              logger.error(message);
             });
         }
 
         makeSheetPublic(sheet.spreadsheetId, accessToken, 'reader')
           .then((response) => {
-            console.log('Sheet made public successfully:', response);
+            const message = `Sheet made public successfully: ${sheet.spreadsheetId}`;
+            logger.info(message);
           })
           .catch((error) => {
-            console.error('Error making sheet public:', error.message);
+            const message = `Error making sheet public: ${error.message}`;
+            logger.error(message);
           });
 
         // send email
-        sendEmailWithSpreadSheetUrl(sheet.spreadsheetUrl).then((response) => console.log(response));
+        sendEmailWithSpreadSheetUrl(sheet.spreadsheetUrl).then((response) => logger.info(`${response}`));
       } else {
-        console.error('Failed to create sheet.');
+        logger.error('Failed to create sheet.');
       }
     }).catch((error) => {
-      console.error('Error creating sheet:', error.message);
+      logger.error('Error creating sheet:' + error.message);
     });
   }).catch((error) => {
-    console.error('Error getting access token:', error.message);
+    logger.error('Error getting access token:' + error.message);
   });
 })

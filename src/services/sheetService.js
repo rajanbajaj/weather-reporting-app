@@ -3,7 +3,8 @@ const SERVICE_ACCOUNT_FILE_PATH = process.env.SERVICE_ACCOUNT_FILE_PATH;
 const SERVICE_ACCOUNT = JSON.parse(fs.readFileSync(SERVICE_ACCOUNT_FILE_PATH).toString());
 const SERVICE_ENDPOINT = "https://sheets.googleapis.com";
 const SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive'
-const { sign } = require("../utils/jwt")
+const { sign } = require("../utils/jwt");
+const { logger } = require('../utils/logger');
 
 const createIatTimestamp = () => {
   return Math.floor(Date.now() / 1000);
@@ -48,10 +49,10 @@ const getAccessToken = async () => {
       throw new Error(JSON.stringify(data));
     }
 
-    // console.log('Access Token:', data.access_token);
+    logger.info('SHEET: Access Token:' + data.access_token);
     return data.access_token;
   } catch (error) {
-    console.error('Failed to get access token:', error.message);
+    logger.error('SHEET: Failed to get access token: ' + error.message);
   }
 }
 
@@ -76,9 +77,9 @@ const makeMeEditorOfSheet = async (spreadsheetId, accessToken) => {
       throw new Error(JSON.stringify(result));
     }
 
-    console.log(`Sheet is now public with role: ${role}`);
+    logger.info(`SHEET: Sheet is now public with role: ${role}`);
   } catch (error) {
-    console.error('Failed to update sheet permissions:', error.message);
+    logger.error('SHEET: Failed to update sheet permissions:' + error.message);
   }
 }; 
 
@@ -109,9 +110,9 @@ const makeMeOwnerOfSheet = async (spreadsheetId, accessToken) => {
       throw new Error(JSON.stringify(result));
     }
 
-    console.log(`Sheet is now public with role: ${role}`);
+    logger.info(`SHEET: Sheet owner is changed to: ${process.env.SHEET_OWNER_EMAIL_ADDRESS}`);
   } catch (error) {
-    console.error('Failed to update sheet permissions:', error.message);
+    logger.error('SHEET: Failed to update sheet permissions:' + error.message);
   }
 }; 
 
@@ -136,9 +137,9 @@ const makeSheetPublic = async (spreadsheetId, accessToken, role = 'reader') => {
       throw new Error(JSON.stringify(result));
     }
 
-    console.log(`Sheet is now public with role: ${role}`);
+    logger.info(`SHEET: Sheet is now public with role: ${role}`);
   } catch (error) {
-    console.error('Failed to update sheet permissions:', error.message);
+    logger.error('SHEET: Failed to update sheet permissions:' + error.message);
   }
 };
 
@@ -158,7 +159,6 @@ const createSheet = async (accessToken, payload) => {
       throw new Error(JSON.stringify(result));
     }
 
-    console.log(result);
     return result;
   } catch (error) {
     console.error('Failed to create sheet:', error.message)

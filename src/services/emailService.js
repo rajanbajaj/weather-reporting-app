@@ -3,7 +3,8 @@ const crypto = require("crypto");
 const SERVICE_ACCOUNT_FILE_PATH = process.env.SERVICE_ACCOUNT_FILE_PATH
 const SERVICE_ACCOUNT = JSON.parse(fs.readFileSync(SERVICE_ACCOUNT_FILE_PATH).toString())
 const SCOPES = "https://www.googleapis.com/auth/gmail.send"
-const { base64url, sign } = require("../utils/jwt")
+const { base64url, sign } = require("../utils/jwt");
+const { logger } = require("../utils/logger");
 
 const createIatTimestamp = () => {
   return Math.floor(Date.now() / 1000);
@@ -50,7 +51,7 @@ const getAccessToken = async () => {
 
     return data.access_token;
   } catch (error) {
-    console.error('Failed to get access token:', error.message);
+    logger.error('Failed to get access token:' + error.message);
   }
 }
 
@@ -92,12 +93,9 @@ const sendEmailWithSpreadSheetUrl = async (spreadsheetUrl) => {
     throw new Error(JSON.stringify(result));
   }
 
-  console.log(`Email Sent: ${result}`);
+  logger.info(`Email Sent: ${result}`);
   return response;
 }
-
-sendEmailWithSpreadSheetUrl("https://docs.google.com/spreadsheets/d/1dlpKQvPnc84TmS4WWBTFInoWZI6576JFqvPsitevEAc/edit")
-  .then((response) => console.log(response));
 
 module.exports = {
   sendEmailWithSpreadSheetUrl

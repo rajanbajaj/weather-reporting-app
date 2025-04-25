@@ -1,5 +1,6 @@
 const { error } = require("console");
 const fs = require('fs');
+const { logger } = require("../utils/logger");
 const top_50_cities_location_api_url = `http://dataservice.accuweather.com/locations/v1/topcities/50?apikey=${process.env.ACCUWEATHER_API_KEY}`;
 const top_50_cities_current_conditions_api_url = `http://dataservice.accuweather.com/currentconditions/v1/topcities/50?apikey=${process.env.ACCUWEATHER_API_KEY}`;
 const MOCK_APIS = process.env.MOCK_APIS;
@@ -91,7 +92,7 @@ const getMergedLocationAndConditionData = async () => {
         throw error(`Request Failed with status code ${resp.status}.`)
       })
       .then((data) => top50LocationData = data)
-      .catch((error) => console.log(error)),
+      .catch((error) => logger.error(error)),
     fetchCurrentConditionForTopLocations(MOCK_APIS==="yes")
       .then((resp) => {
         if(resp.status == "200") {
@@ -101,7 +102,7 @@ const getMergedLocationAndConditionData = async () => {
         throw error(`Request Failed with status code ${resp.status}.`)
       })
       .then((data) => top50CondtionData = data)
-      .catch((error) => console.log(error))
+      .catch((error) => logger.error(error))
   ]).then(() => {
     for (i=0; i<top50LocationData.length; i++) {
       locationData = top50LocationData[i];
