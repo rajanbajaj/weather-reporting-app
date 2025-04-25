@@ -68,33 +68,37 @@ const createEmailRawContent = (to, subject, htmlBody) => {
 }
 
 const sendEmailWithSpreadSheetUrl = async (spreadsheetUrl) => {
-  let accessToken = await getAccessToken()
-  let api_url = "https://gmail.googleapis.com/upload/gmail/v1/users/me/messages/send"
-  let to = "rajanbajajkota@gmail.com";
-  let subject = "Test Subject";
-  let htmlBody = spreadsheetUrl;
-  let payload = {
-    raw: createEmailRawContent(to, subject, htmlBody)
-  };
-
-  const formBody = new URLSearchParams(payload);
-  const response = await fetch(api_url, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${accessToken}`,
-      'Content-Type': 'message/rfc822'
-    },
-    body: formBody
-  });
-
-  const result = await response.json();
-
-  if (response.status != 200) {
-    throw new Error(JSON.stringify(result));
+  try {
+      let accessToken = await getAccessToken()
+      let api_url = "https://gmail.googleapis.com/upload/gmail/v1/users/me/messages/send"
+      let to = "rajanbajajkota@gmail.com";
+      let subject = "Test Subject";
+      let htmlBody = spreadsheetUrl;
+      let payload = {
+        raw: createEmailRawContent(to, subject, htmlBody)
+      };
+    
+      const formBody = new URLSearchParams(payload);
+      const response = await fetch(api_url, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'message/rfc822'
+        },
+        body: formBody
+      });
+    
+      const result = await response.json();
+    
+      if (response.status != 200) {
+        throw new Error(JSON.stringify(result));
+      }
+    
+      logger.info(`Email Sent: ${result}`);
+      return response;
+  } catch (error) {
+    logger.error("EMAIL: error in sending email with spread sheet URL: "+ error.message)
   }
-
-  logger.info(`Email Sent: ${result}`);
-  return response;
 }
 
 module.exports = {
