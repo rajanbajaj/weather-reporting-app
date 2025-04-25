@@ -89,17 +89,6 @@ Example Logs:
 ## Cron logs:
 If schedular is set using `./scripts/schedular.sh`, the logs will also be saved in ./logs/cron.log file.
 
-# Future Improvements:
-Make this service more configurable to add configurations to .env file and use them in the code.
-Example for this could be:
-* sheet permissions configurable through .env
-* app logging levels based on app runtime environment configurable through .env
-* If app environemnt is production skip loggging for debug function.
-* JWT algorithms to use for signing payload configurable through .env
-* Datetime formating using locale variable configurable through .env
-* Improve logging
-* Add test cases for code coverage
-
 # References:
 * https://developers.google.com/workspace/guides/create-credentials#api-key
 * https://console.cloud.google.com/apis/credentials?project=festive-oxide-457817-d7

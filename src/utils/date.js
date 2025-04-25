@@ -1,7 +1,7 @@
 /**
  * Convert the ISO 8601 Datetime string to the request format
  * requested format: 20/05/2022 at 2:30 pm IST
-*/
+ **/
 function convertToIST(datetimeString) {
   const date = new Date(datetimeString);
 

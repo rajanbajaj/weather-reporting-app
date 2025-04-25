@@ -2,6 +2,9 @@ const { createIatTimestamp } = require("../utils/date")
 const { sign } = require("../utils/jwt");
 const { logger } = require("../utils/logger");
 
+/**
+ * Generates an OAuth2 access token using a Google service account and JWT.
+ **/
 const getAccessToken = async (serviceAccount, scopes) => {
   const iat = createIatTimestamp()
   let exp = iat + 300 // expiration time is 5min

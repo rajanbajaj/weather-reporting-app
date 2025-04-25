@@ -14,7 +14,7 @@ const serviceAccount = JSON.parse(fs.readFileSync(SERVICE_ACCOUNT_FILE_PATH).toS
  * format the data in expected payload for sheets API
  * create a new sheet with the payload
  * make sheet publicaly accessible
- */
+ **/
 getMergedLocationAndConditionData().then((data) => {
   if (process.env.ENABLE_SHEET_FUNCTIONALITY === "true") {
     const headers = Object.keys(data[0]);

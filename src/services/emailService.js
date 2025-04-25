@@ -1,10 +1,14 @@
 const fs = require("fs");
-const { base64url } = require("../utils/jwt");
-const { logger } = require("../utils/logger");
-const { getAccessToken } = require("../services/googleTokenService")
+const { base64url } = require("../utils/jwt");  // Custom utility to encode content in base64url
+const { logger } = require("../utils/logger");  // Custom logger for logging information and errors
+const { getAccessToken } = require("../services/googleTokenService")  // Service to fetch OAuth2 access token
 
-const SERVICE_ACCOUNT_FILE_PATH = process.env.SERVICE_ACCOUNT_FILE_PATH;
+const SERVICE_ACCOUNT_FILE_PATH = process.env.SERVICE_ACCOUNT_FILE_PATH; // Path to Google service account JSON key file
 
+/**
+ * Helper function to create raw email content formatted for the Gmail API.
+ * Encodes the email as a base64url string.
+ **/
 const createEmailRawContent = (to, subject, htmlBody) => {
   const str = [
     `To: ${to}`,
@@ -17,6 +21,10 @@ const createEmailRawContent = (to, subject, htmlBody) => {
   return base64url(str);
 }
 
+/**
+ * Sends an email via the Gmail API using a service account.
+ * The email body contains a Google Spreadsheet URL.
+ **/
 const sendEmailWithSpreadSheetUrl = async (spreadsheetUrl) => {
   try {
       const serviceAccount = JSON.parse(fs.readFileSync(SERVICE_ACCOUNT_FILE_PATH).toString());
