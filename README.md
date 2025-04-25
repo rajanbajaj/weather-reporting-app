@@ -71,3 +71,15 @@ Example Logs:
 
 ## Cron logs:
 If schedular is set using `./scripts/schedular.sh`, the logs will also be saved in ./logs/cron.log file.
+
+# References:
+* https://developers.google.com/workspace/guides/create-credentials#api-key
+* https://console.cloud.google.com/apis/credentials?project=festive-oxide-457817-d7
+* https://developers.google.com/workspace/sheets/api/reference/rest
+* https://gist.github.com/ryu1kn/c76aed0af8728f659730d9c26c9ee0ed
+* https://developers.google.com/identity/protocols/oauth2/service-account
+* https://developers.google.com/workspace/sheets/api/reference/rest
+* https://developers.google.com/workspace/drive/api/reference/rest/v3
+* https://jwt.io/introduction
+* https://developer.atlassian.com/cloud/jira/software/user-impersonation-for-connect-apps/
+* https://www.youtube.com/watch?v=ohIAiuHMKMI&list=PLinedj3B30sDby4Al-i13hQJGQoRQDfPo
