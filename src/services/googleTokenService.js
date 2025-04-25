@@ -1,6 +1,6 @@
+const { createIatTimestamp } = require("../utils/date")
 const { sign } = require("../utils/jwt");
 const { logger } = require("../utils/logger");
-const { createIatTimestamp } = require("../utils/date")
 
 const getAccessToken = async (serviceAccount, scopes) => {
   const iat = createIatTimestamp()

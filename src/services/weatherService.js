@@ -1,10 +1,12 @@
 const { error } = require("console");
-const { convertToIST } = require("../utils/date");
 const fs = require('fs');
+const { convertToIST } = require("../utils/date");
 const { logger } = require("../utils/logger");
+
+
 const top_50_cities_location_api_url = `http://dataservice.accuweather.com/locations/v1/topcities/50?apikey=${process.env.ACCUWEATHER_API_KEY}`;
 const top_50_cities_current_conditions_api_url = `http://dataservice.accuweather.com/currentconditions/v1/topcities/50?apikey=${process.env.ACCUWEATHER_API_KEY}`;
-const MOCK_APIS = process.env.MOCK_APIS;
+const MOCK_APIS = process.env.MOCK_APIS === "true";
 
 /** 
  * mocks the data the data from ./location-response.json file 
@@ -84,7 +86,7 @@ const getMergedLocationAndConditionData = async () => {
   let result = [];
 
   result = await Promise.all([
-    fetchLocationsData(MOCK_APIS==="yes")
+    fetchLocationsData(MOCK_APIS)
       .then((resp) => {
         if(resp.status == "200") {
           return resp.json()
@@ -94,7 +96,7 @@ const getMergedLocationAndConditionData = async () => {
       })
       .then((data) => top50LocationData = data)
       .catch((error) => logger.error(error)),
-    fetchCurrentConditionForTopLocations(MOCK_APIS==="yes")
+    fetchCurrentConditionForTopLocations(MOCK_APIS)
       .then((resp) => {
         if(resp.status == "200") {
           return resp.json()

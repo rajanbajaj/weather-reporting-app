@@ -17,13 +17,21 @@ A node.js weather reporting app to schedule the reports
   * Users can be associated to a service account in admin account only.
 * Copy config/.env.example file to config/.env
   * ACCUWEATHER_API_KEY: API key generated for weather app
-  * MOCK_APIS: "yes" or "no". If set to "yes" it will mock weather APIs without using actual APIS.
   * SERVICE_ACCOUNT_FILE_PATH: File path of the generate key.json file in previous steps
+  * ENABLE_MOCKING_FOR_WEATHER_APIS: "true" or "false". If set to "true" it will mock weather APIs without using actual APIS.
+  * ENABLE_SEND_EMAIL_FUNCTIONALITY: "true" or "false". If set to "true" it will send customized email to the selected user.
+  * ENABLE_SHEET_FUNCTIONALITY: "true" or "false". If set to "true" it will use google sheets to store data. Otherwise it will save data to local "output.csv" file.
   * SHEET_OWNER_EMAIL_ADDRESS: comma separated gmail accounts of users that is in the organisation of the same serivce account is linked
 ```bash
+SHEET_OWNER_EMAIL_ADDRESS=
+
 ACCUWEATHER_API_KEY=YOUR_API_KEY_HERE
-MOCK_APIS=yes  # should be no for production settings 
 SERVICE_ACCOUNT_FILE_PATH=./credentials/key.json
+ENABLE_MOCKING_FOR_WEATHER_APIS=true
+ENABLE_SEND_EMAIL_FUNCTIONALITY=false
+ENABLE_SHEET_FUNCTIONALITY=true
+
+# Comma separated Email adresses to send notifications
 SHEET_OWNER_EMAIL_ADDRESS=example@xyz.com,abc@vfa.com
 ```
 
@@ -73,6 +81,9 @@ Example Logs:
 [ERROR] 2025-04-25T13:43:21.114Z - EMAIL: error in sending email with spread sheet URL: <ERROR>
 [ERROR] 2025-04-25T13:43:21.195Z - SHEET: Failed to update sheet permissions:role is not defined
 [INFO] 2025-04-25T13:43:21.196Z - Sheet made public successfully: id: <SHEET_ID> url: <SHARABLE_SHEET_URL>
+
+# example error
+[ERROR] 2025-04-25T17:08:46.667Z - SHEET: Failed to update sheet permissions:{"error":{"code":403,"message":"Rate limit exceeded. User message: \"Sorry, you have exceeded your sharing quota.\"","errors":[{"message":"Rate limit exceeded. User message: \"Sorry, you have exceeded your sharing quota.\"","domain":"usageLimits","reason":"sharingRateLimitExceeded"}]}}
 ```
 
 ## Cron logs:
@@ -86,6 +97,7 @@ Example for this could be:
 * JWT algorithms to use for signing payload configurable through .env
 * Datetime formating using locale variable configurable through .env
 * Improve logging
+* Add test cases for code coverage
 
 # References:
 * https://developers.google.com/workspace/guides/create-credentials#api-key

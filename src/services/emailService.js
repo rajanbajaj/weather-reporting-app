@@ -1,9 +1,9 @@
 const fs = require("fs");
-const crypto = require("crypto");
-const SERVICE_ACCOUNT_FILE_PATH = process.env.SERVICE_ACCOUNT_FILE_PATH;
-const { base64url, sign } = require("../utils/jwt");
+const { base64url } = require("../utils/jwt");
 const { logger } = require("../utils/logger");
 const { getAccessToken } = require("../services/googleTokenService")
+
+const SERVICE_ACCOUNT_FILE_PATH = process.env.SERVICE_ACCOUNT_FILE_PATH;
 
 const createEmailRawContent = (to, subject, htmlBody) => {
   const str = [
