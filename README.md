@@ -1,2 +1,73 @@
 # weather-reporting-app
 A node.js weather reporting app to schedule the reports
+
+# Prerequisits:
+* node version v23.11.0
+* Create a google console developer account
+* Create a service account on google cloud workspace: https://cloud.google.com/iam/docs/service-accounts-create
+* Enable the following APIs for this service account:
+  * Google Sheets
+  * Google Drive
+  * Gmail
+* Generate a "Key" in JSON format for this service: https://cloud.google.com/iam/docs/keys-create-delete
+* Save the key.json file for the previous step in <project_root>/credentials directory or any other directory in your machine.
+* Link this service account project to Google wrokspace organization.
+* (Blocker) Add users to the project and organization to allow service account to send emails on behalf of this user.
+  * Google do not allow service account to send emails directly without associating any users to it.
+  * Users can be associated to a service account in admin account only.
+* Copy config/.env.example file to config/.env
+  * ACCUWEATHER_API_KEY: API key generated for weather app
+  * MOCK_APIS: "yes" or "no". If set to "yes" it will mock weather APIs without using actual APIS.
+  * SERVICE_ACCOUNT_FILE_PATH: File path of the generate key.json file in previous steps
+  * SHEET_OWNER_EMAIL_ADDRESS: gmail account of user that is in the organisation of the same serivce account is linked
+```bash
+ACCUWEATHER_API_KEY=YOUR_API_KEY_HERE
+MOCK_APIS=yes  # should be no for production settings 
+SERVICE_ACCOUNT_FILE_PATH=./credentials/key.json
+SHEET_OWNER_EMAIL_ADDRESS=example@xyz.com
+```
+
+# Running the application:
+
+## Run manually:
+* In project root run the following command:
+```bash
+npm start
+```
+
+## Setup Schedular:
+* To setup schedular update the cron commands in the following files to appropriate configurations.
+* By default it is set to every week on Monday at 12:00AM.
+* Please make sure the changes in one file made should be matched with other file for proper use.
+```bash
+- ./scripts/schedular.sh (this adds cron job using crontab)
+- ./scripts/remove_schedular.sh (this removes the added cron job using crontab)
+```
+
+### Activate Schedular
+```bash
+$ cd ./scripts
+$ ./schedular.sh
+```
+
+### Deactivae Schedular
+```bash
+$ cd ./scripts 
+$ ./remove_schedular.sh
+```
+
+# Logs
+## Application logs:
+All application logs wheather running manually or by schedular will be saved to ./logs/app.log file.
+Example Logs:
+```bash
+[INFO] 2025-04-25T13:43:18.596Z - SHEET: Access Token:<TOKEN>
+[INFO] 2025-04-25T13:43:20.584Z - SHEET: Sheet is now public with role: reader
+[INFO] 2025-04-25T13:43:20.585Z - Sheet made public successfully: <SHEET_ID>
+[ERROR] 2025-04-25T13:43:21.114Z - EMAIL: error in sending email with spread sheet URL: <ERROR>
+[ERROR] 2025-04-25T13:43:21.195Z - SHEET: Failed to update sheet permissions:role is not defined
+[INFO] 2025-04-25T13:43:21.196Z - Sheet made public successfully: id: <SHEET_ID> url: <SHARABLE_SHEET_URL>
+```
+
+## Cron logs:
+If schedular is set using `./scripts/schedular.sh`, the logs will also be saved in ./logs/cron.log file.
