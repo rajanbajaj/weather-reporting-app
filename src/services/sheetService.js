@@ -1,6 +1,6 @@
 const fs = require('fs');
-const SERVICE_ACCOUNT_FILE = process.env.SERVICE_ACCOUNT_FILE;
-const SERVICE_ACCOUNT = JSON.parse(fs.readFileSync(SERVICE_ACCOUNT_FILE).toString());
+const SERVICE_ACCOUNT_FILE_PATH = process.env.SERVICE_ACCOUNT_FILE_PATH;
+const SERVICE_ACCOUNT = JSON.parse(fs.readFileSync(SERVICE_ACCOUNT_FILE_PATH).toString());
 const SERVICE_ENDPOINT = "https://sheets.googleapis.com";
 const SCOPES = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive'
 const { sign } = require("../utils/jwt")

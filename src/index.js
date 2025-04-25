@@ -5,6 +5,9 @@ const {
   makeMeEditorOfSheet 
 } = require("./services/sheetService");
 const { getMergedLocationAndConditionData } = require("./services/weatherService");
+const {
+  sendEmailWithSpreadSheetUrl
+} = require("./services/emailService");
 
 /**
  * gets the weather data
@@ -110,6 +113,9 @@ getMergedLocationAndConditionData().then((data) => {
           .catch((error) => {
             console.error('Error making sheet public:', error.message);
           });
+
+        // send email
+        sendEmailWithSpreadSheetUrl(sheet.spreadsheetUrl).then((response) => console.log(response));
       } else {
         console.error('Failed to create sheet.');
       }
