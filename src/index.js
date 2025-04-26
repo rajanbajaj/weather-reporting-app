@@ -116,7 +116,7 @@ getMergedLocationAndConditionData().then((data) => {
             const userEmailAddresses = process.env.SHEET_OWNER_EMAIL_ADDRESS.split(",");
             userEmailAddresses.forEach((emailAddress) => {
               const sheetPermissions = {
-                role: 'writer',
+                role: 'reader',
                 type: 'user',
                 emailAddress: emailAddress
               }
