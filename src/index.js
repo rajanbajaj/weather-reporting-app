@@ -3,6 +3,7 @@ const { sendEmailWithSpreadSheetUrl } = require("./services/emailService");
 const { getAccessToken } = require("./services/googleTokenService")
 const { createSheet, makeSheetPublic } = require("./services/sheetService");
 const { addDataToCSVFile, getMergedLocationAndConditionData } = require("./services/weatherService");
+const { isValidEmail } = require("./utils/email");
 
 /**
  * gets the weather data
@@ -110,6 +111,11 @@ getMergedLocationAndConditionData().then((data) => {
           if (process.env.SHEET_OWNER_EMAIL_ADDRESS) {
             const userEmailAddresses = process.env.SHEET_OWNER_EMAIL_ADDRESS.split(",");
             userEmailAddresses.forEach((emailAddress) => {
+              // if email not valid skip execution
+              if (!isValidEmail(emailAddress)) {
+                return logger.warn(`Not a valid email address in .env file: ${emailAddress}`);
+              } 
+
               const sheetPermissions = {
                 role: 'reader',
                 type: 'user',

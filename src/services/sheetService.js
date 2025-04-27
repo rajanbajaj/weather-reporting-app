@@ -7,7 +7,7 @@ const { logger } = require('../utils/logger');
  * TODO: Currently the personal Gmail account and the service account are not in the same Google Workspace.
  * Hence, using an alternate method (`makeSheetPublic`) to get edit access instead.
  **/
-const makeMeOwnerOfSheet = async (spreadsheetId, accessToken) => {
+const makeMeOwnerOfSheet = async (spreadsheetId, accessToken, email) => {
   try {
     const response = await fetch(`https://www.googleapis.com/drive/v3/files/${spreadsheetId}/permissions?transferOwnership=true`, {
       method: 'POST',
@@ -19,7 +19,7 @@ const makeMeOwnerOfSheet = async (spreadsheetId, accessToken) => {
         role: 'owner',
         type: 'user',
         pendingOwner: true,
-        emailAddress: process.env.SHEET_OWNER_EMAIL_ADDRESS
+        emailAddress: email
       })
     });
 
@@ -29,7 +29,7 @@ const makeMeOwnerOfSheet = async (spreadsheetId, accessToken) => {
       throw new Error(JSON.stringify(result));
     }
 
-    logger.info(`SHEET: Sheet owner is changed to: ${process.env.SHEET_OWNER_EMAIL_ADDRESS}`);
+    logger.info(`SHEET: Sheet owner is changed to: ${email}`);
   } catch (error) {
     logger.error('SHEET: Failed to update sheet permissions:' + error.message);
   }
