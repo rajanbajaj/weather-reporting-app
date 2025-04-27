@@ -6,7 +6,7 @@ const { logger } = require("../utils/logger");
 
 const top_50_cities_location_api_url = `http://dataservice.accuweather.com/locations/v1/topcities/50?apikey=${process.env.ACCUWEATHER_API_KEY}`;
 const top_50_cities_current_conditions_api_url = `http://dataservice.accuweather.com/currentconditions/v1/topcities/50?apikey=${process.env.ACCUWEATHER_API_KEY}`;
-const MOCK_APIS = process.env.MOCK_APIS === "true";
+const MOCK_APIS = process.env.ENABLE_MOCKING_FOR_WEATHER_APIS === "true";
 
 /** 
  * mocks the data the data from ./location-response.json file 
