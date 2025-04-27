@@ -97,6 +97,9 @@ If schedular is set using `./scripts/schedular.sh`, the logs will also be saved 
 * https://developers.google.com/identity/protocols/oauth2/service-account
 * https://developers.google.com/workspace/sheets/api/reference/rest
 * https://developers.google.com/workspace/drive/api/reference/rest/v3
+* https://www.youtube.com/watch?v=ohIAiuHMKMI&list=PLinedj3B30sDby4Al-i13hQJGQoRQDfPo
 * https://jwt.io/introduction
 * https://developer.atlassian.com/cloud/jira/software/user-impersonation-for-connect-apps/
-* https://www.youtube.com/watch?v=ohIAiuHMKMI&list=PLinedj3B30sDby4Al-i13hQJGQoRQDfPo
+* https://nodejs.org/api/crypto.html#class-sign
+* https://developer.mozilla.org/en-US/docs/Glossary/Base64
+* https://www.w3schools.com/nodejs/ref_buffer.asp

@@ -1,13 +1,8 @@
-const fs = require("fs");
 const { logger } = require("./utils/logger");
 const { sendEmailWithSpreadSheetUrl } = require("./services/emailService");
 const { getAccessToken } = require("./services/googleTokenService")
 const { createSheet, makeSheetPublic } = require("./services/sheetService");
 const { addDataToCSVFile, getMergedLocationAndConditionData } = require("./services/weatherService");
-
-
-const SERVICE_ACCOUNT_FILE_PATH = process.env.SERVICE_ACCOUNT_FILE_PATH;
-const serviceAccount = JSON.parse(fs.readFileSync(SERVICE_ACCOUNT_FILE_PATH).toString());
 
 /**
  * gets the weather data
@@ -106,7 +101,7 @@ getMergedLocationAndConditionData().then((data) => {
     };
 
     const scopes = 'https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive'
-    getAccessToken(serviceAccount, scopes).then((accessToken) => {
+    getAccessToken(scopes).then((accessToken) => {
       createSheet(accessToken, payload).then((sheet) => {
         // if the sheet creation was successful, make it public read-only report
         if (sheet && sheet.spreadsheetId) {

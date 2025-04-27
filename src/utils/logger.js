@@ -11,7 +11,11 @@ const logFile = path.join(logDir, 'app.log');
 
 const logToFile = (level, message) => {
   const logMessage = `[${level.toUpperCase()}] ${new Date().toISOString()} - ${message}\n`;
-  console.log(logMessage);
+  if (level.toUpperCase() === "ERROR") {
+    throw new Error(logMessage);
+  } else {
+    console.log(logMessage);
+  }
   fs.appendFileSync(logFile, logMessage);
 };
 

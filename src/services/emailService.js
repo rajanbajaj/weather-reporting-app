@@ -1,9 +1,6 @@
-const fs = require("fs");
 const { base64url } = require("../utils/jwt");  // Custom utility to encode content in base64url
 const { logger } = require("../utils/logger");  // Custom logger for logging information and errors
 const { getAccessToken } = require("../services/googleTokenService")  // Service to fetch OAuth2 access token
-
-const SERVICE_ACCOUNT_FILE_PATH = process.env.SERVICE_ACCOUNT_FILE_PATH; // Path to Google service account JSON key file
 
 /**
  * Helper function to create raw email content formatted for the Gmail API.
@@ -27,9 +24,8 @@ const createEmailRawContent = (to, subject, htmlBody) => {
  **/
 const sendEmailWithSpreadSheetUrl = async (spreadsheetUrl) => {
   try {
-      const serviceAccount = JSON.parse(fs.readFileSync(SERVICE_ACCOUNT_FILE_PATH).toString());
       const scopes = "https://www.googleapis.com/auth/gmail.send"
-      const accessToken = await getAccessToken(serviceAccount, scopes)
+      const accessToken = await getAccessToken(scopes)
       const api_url = "https://gmail.googleapis.com/upload/gmail/v1/users/me/messages/send"
       const to = "rajanbajajkota@gmail.com";
       const subject = "Test Subject";
