@@ -6,11 +6,7 @@ const SERVICE_ACCOUNT = JSON.parse(fs.readFileSync(SERVICE_ACCOUNT_FILE_PATH).to
 
 const base64url = (input) => {
   const str = typeof input === 'string' ? input : JSON.stringify(input);
-  return Buffer.from(str)
-    .toString('base64')
-    .replace(/=/g, '')
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_');
+  return Buffer.from(str).toString('base64url');
 };
 
 const sign = (payload, header, algorithm = 'RSA-SHA256') => {
@@ -22,11 +18,7 @@ const sign = (payload, header, algorithm = 'RSA-SHA256') => {
   const signer = crypto.createSign(algorithm);
   signer.update(signatureInput);
   signer.end();
-  const signature = signer.sign(SERVICE_ACCOUNT.private_key, 'base64')
-    .replace(/=/g, '')
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_');
-
+  const signature = signer.sign(SERVICE_ACCOUNT.private_key, 'base64url');
   return `${signatureInput}.${signature}`;
 }
 
