@@ -3,6 +3,7 @@ A node.js weather reporting app to schedule the reports
 
 # Prerequisits:
 * node version v23.11.0
+* Register an APP to get an API key for weather data at https://developer.accuweather.com/
 * Create a google console developer account
 * Create a service account on google cloud workspace: https://cloud.google.com/iam/docs/service-accounts-create
 * Enable the following APIs for this service account:
@@ -47,6 +48,8 @@ npm start
 * To setup schedular update the cron commands in the following files to appropriate configurations.
 * By default it is set to every week on Monday at 12:00AM.
 * Please make sure the changes in one file made should be matched with other file for proper use.
+* Update the project path and node path in both the files
+  * To find your node path please run `which node` command in terminal
 ```bash
 - ./scripts/schedular.sh (this adds cron job using crontab)
 - ./scripts/remove_schedular.sh (this removes the added cron job using crontab)
